@@ -9,8 +9,10 @@ from tkinter.messagebox import * #pour les alertes
 import serial
 import time
 import os
-
-# import picamera
+try:
+    import picamera
+except:
+    print("picamera not found")
 import numpy as np
 from PIL import Image as ImagePIL #ATTENTION : "as ImagePIL" a été rajouté sinon il y a un conflit (type object 'Image' has no attribute 'open') avec tkinter
 from math import log10
