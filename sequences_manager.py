@@ -127,45 +127,14 @@ def execute_sequence_file(device,filename,interface_output,acquisition):
             if device.name == "meatest":
                 device.write("OUTP ON <lf>")
             execute_single_command(device,sequence_type,module,unit,frequency)
-            # sleep(0.5)
+            if sequence_type == "R":
+                sleep(2.0)
+            else:
+                sleep(3.0)
             if device.name == "meatest":
                 device.write("OUTP ON <lf>")
-            # acquisition(acquisition_text)
-        # elif sequence_type == "VDC":
-        #     sequence = line_words[1].split(":")
-        #     start, step, end = get_sequence_array(sequence)
-        #     unit = line_words[2]
-        #     # print_sequence(start, step, end, unit)
-        #     execute_sequence(device.dc_tension_output, start, step, end, unit)
-        #
-        # elif sequence_type == "VAC":
-        #     sequence = line_words[1].split(":")
-        #     start, step, end = get_sequence_array(sequence)
-        #     unit = line_words[2]
-        #     frequency = int(line_words[3])
-        #     # print_sequence(start, step, end, unit, frequency)
-        #     execute_sequence(device.ac_tension_output, start, step, end, unit, frequency)
-        # elif sequence_type == "IDC":
-        #     sequence = line_words[1].split(":")
-        #     start, step, end = get_sequence_array(sequence)
-        #     unit = line_words[2]
-        #     # print_sequence(start, step, end, unit)
-        #     execute_sequence(device.dc_current_output, start, step, end, unit)
-        #
-        # elif sequence_type == "IAC":
-        #     sequence = line_words[1].split(":")
-        #     start, step, end = get_sequence_array(sequence)
-        #     unit = line_words[2]
-        #     frequency = int(line_words[3])
-        #     # print_sequence(start, step, end, unit, frequency)
-        #     execute_sequence(device.ac_current_output, start, step, end, unit, frequency)
-        #
-        # elif sequence_type == "R":
-        #     sequence = line_words[1].split(":")
-        #     start, step, end = get_sequence_array(sequence)
-        #     unit = line_words[2]
-        #     # print_sequence(start, step, end, unit)
-        #     execute_sequence(device.resistance_output, start, step, end, unit)
+            acquisition(acquisition_text)
+
         elif function.startswith("FONCTION"):
             continue
         else:
