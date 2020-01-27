@@ -27,7 +27,7 @@ IDC    10_A    #    5.0    -5.0  remplir    remplir   NOK
 IAC_50    21_UA    #    10.5    -5.0  remplir    remplir   NOK
 IAC_50    6000_UA    #    3000.0    -5.0  remplir    remplir   NOK
 IAC_50    60_MA    #    30.0    -5.0  remplir    remplir   NOK
-IAC_50    600MA_A    #    300.0    -5.0  remplir    remplir   NOK
+IAC_50    600_MA    #    300.0    -5.0  remplir    remplir   NOK
 IAC_50    6_A    #    3.0    -5.0  remplir    remplir   NOK
 IAC_50    10_A    #    5.0    -5.0  remplir    remplir   NOK
 R    600_O    #    100.0    -100.0  remplir    remplir   NOK
