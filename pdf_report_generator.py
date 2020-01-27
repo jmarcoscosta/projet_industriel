@@ -44,7 +44,7 @@ def generate_pdf(txt_file):
 				lines_data[i][1] = l[1].replace('m','M')
 
 
-	filename = "report.pdf"
+	filename = txt_file.replace("txt","pdf")
 
 	from reportlab.platypus import SimpleDocTemplate
 	from reportlab.lib.pagesizes import letter, A4, portrait
