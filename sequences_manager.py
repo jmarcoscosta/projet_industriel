@@ -91,6 +91,7 @@ def execute_single_command(device,sequence_type, module, unit, frequency=0):
 from tkinter.messagebox import askokcancel
 def execute_sequence_file(device,filename,interface_output,acquisition):
     file = open(filename, "r")
+    print(filename)
     lines_list = file.readlines()
     previous_calib = "VDC_MV"
 
@@ -109,20 +110,27 @@ def execute_sequence_file(device,filename,interface_output,acquisition):
         if function[0:3] in functions:
             sequence_type, module, unit, frequency = parse_single_command(line)
             new_calib = sequence_type+"_"+unit.upper()
-
+            # print("calib:",new_calib)
             if new_calib != previous_calib:
                 # sleep(3)
-                go_on = askokcancel("Changement de calibre","Passez au calibre "+new_calib+" "+str(module))
-
+                # print(str(module))
+                go_on = askokcancel("Changement de calibre","Passez au calibre "+new_calib+" "+str(module)+unit.upper())
+                if not go_on:
+                    device.close_communication()
+                    break;
             previous_calib = new_calib
             if len(unit) == 1:
                 acquisition_text = " ".join([sequence_type,str(module),unit,str(frequency)," Hz"])
             elif len(unit) ==2:
                 acquisition_text = " ".join([sequence_type, str(module), unit[0].lower()+unit[1].upper(), str(frequency), " Hz"])
             interface_output(acquisition_text)
+            if device.name == "meatest":
+                device.write("OUTP ON <lf>")
             execute_single_command(device,sequence_type,module,unit,frequency)
-            sleep(0.5)
-            acquisition(acquisition_text)
+            # sleep(0.5)
+            if device.name == "meatest":
+                device.write("OUTP ON <lf>")
+            # acquisition(acquisition_text)
         # elif sequence_type == "VDC":
         #     sequence = line_words[1].split(":")
         #     start, step, end = get_sequence_array(sequence)

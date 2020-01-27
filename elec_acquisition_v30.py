@@ -10,7 +10,7 @@ import serial
 import time
 import os
 
-import picamera
+# import picamera
 import numpy as np
 from PIL import Image as ImagePIL #ATTENTION : "as ImagePIL" a été rajouté sinon il y a un conflit (type object 'Image' has no attribute 'open') avec tkinter
 from math import log10
@@ -61,8 +61,9 @@ print(longueurSequence)
 tempsAttente = 5000 #en ms
 
 # from main import *
-from Calibrators.Fluke_API import *
-from Calibrators.Meatest_API import *
+from Meatest_API import *
+from Fluke_API import *
+# from Calibrators.Meatest_API import *
 # from Calibrators.CX_Metrix_API import *
 from sequences_manager import *
 
