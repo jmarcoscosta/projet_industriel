@@ -11,15 +11,17 @@ def generate_pdf(txt_file):
 	lines_list = file.readlines()
 	lines_data = []
 	for l in lines_list:
-		lines_data.append(l.split())
+		if not l.strip():
+			continue
+		else:
+			lines_data.append(l.split())
 	print(lines_data)
 # FONCTION - CALIBRE - APPAREIL - ETALON - ECART - EMT - INCERTITUDE - CONFORMITE
 # VDC 50 _MV  # 25.0    -25.0  remplir    remplir   NOK
 
 	for i,l in enumerate(lines_data):
-		if i > 0:
-			if '_' in l[0]:
-				lines_data[i][0] = l[0].replace('_',' ')+" Hz"
+		if '_' in l[0]:
+			lines_data[i][0] = l[0].replace('_',' ')+" Hz"
 	for i,l in enumerate(lines_data):
 		if i > 0:
 			# print("bef",l[1])
@@ -92,4 +94,4 @@ def generate_pdf(txt_file):
 	pdf_elements.append(table)
 	pdf.build(pdf_elements)
 
-# generate_pdf("sequence_etalonnage.txt")
+generate_pdf("C:\\Users\\João Marcos Costa\\Documents\\ENSICAEN2019-2020\\Projet Industriel\\CA5277.txt")
