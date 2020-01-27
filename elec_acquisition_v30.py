@@ -76,22 +76,8 @@ def Sequence():
     global listeNombre, l
     
     numSequence += 1
-
-    # ser = serial.Serial( #RS232 avec Fluke
-    # port = '/dev/ttyUSB0',
-    # baudrate = 9600,
-    # parity = serial.PARITY_NONE,
-    # stopbits = serial.STOPBITS_ONE,
-    # bytesize = serial.EIGHTBITS,
-    # xonxoff = True,
-    # timeout = 1
-    # )
-    #
-    # print(ser.isOpen())
-
     device_name = liste.get(ACTIVE)
     print(device_name)
-
 
     if device_name == "Fluke":
         print("entrou")

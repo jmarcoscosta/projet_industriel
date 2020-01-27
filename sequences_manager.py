@@ -128,9 +128,9 @@ def execute_sequence_file(device,filename,interface_output,acquisition):
                 device.write("OUTP ON <lf>")
             execute_single_command(device,sequence_type,module,unit,frequency)
             if sequence_type == "R":
-                sleep(2.0)
-            else:
                 sleep(3.0)
+            else:
+                sleep(2.0)
             if device.name == "meatest":
                 device.write("OUTP ON <lf>")
             acquisition(acquisition_text)
@@ -140,7 +140,7 @@ def execute_sequence_file(device,filename,interface_output,acquisition):
         else:
             messagebox.showerror("ERROR", "Sequence type not found: "+line_words[0])
             return 0
-        sleep(1)
+        # sleep(1)
 
 def pop_up_R(root=0):
     from tkinter import simpledialog
