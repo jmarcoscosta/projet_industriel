@@ -5,6 +5,19 @@ def save_as():
 												 filetypes=(("PDF files", "*.pdf")))
 	return filename
 
+def calc_conformity(list_of_lists):
+	for i,l in enumerate(list_of_lists):
+		if i>0:
+			if l[2] == "ERREUR":
+				list_of_lists[i][-1] = "NOK"
+			else:
+				diff = float(l[2])-float(l[3])
+				list_of_lists[i][4] = str(diff)
+				if abs(diff) <= float(l[5]):
+					list_of_lists[i][-1] = "OK"
+				else:
+					list_of_lists[i][-1] = "NOK"
+
 def generate_pdf(txt_file):
 	file = open(txt_file,'r')
 	print("filename:",txt_file)
@@ -15,7 +28,8 @@ def generate_pdf(txt_file):
 			continue
 		else:
 			lines_data.append(l.split())
-	print(lines_data)
+	# print(lines_data)
+	calc_conformity(lines_data)
 # FONCTION - CALIBRE - APPAREIL - ETALON - ECART - EMT - INCERTITUDE - CONFORMITE
 # VDC 50 _MV  # 25.0    -25.0  remplir    remplir   NOK
 
@@ -94,4 +108,4 @@ def generate_pdf(txt_file):
 	pdf_elements.append(table)
 	pdf.build(pdf_elements)
 
-generate_pdf("C:\\Users\\João Marcos Costa\\Documents\\ENSICAEN2019-2020\\Projet Industriel\\CA5277.txt")
+generate_pdf("C:\\Users\\João Marcos Costa\\Documents\\ENSICAEN2019-2020\\Projet Industriel\\dev\\CA5277.txt")
