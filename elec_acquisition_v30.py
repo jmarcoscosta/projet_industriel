@@ -47,154 +47,204 @@ IAC = [5]
 
 R = [10, 100, 1e3, 10e3, 100e3, 1e6, 10e6]
 
+listeNbreDigits=[]
+listeErreursVirgule = []
+listeTemps=[]
+
+listeNombre=[]
+listeNombreInt=[]
+listeImagesRognees=[]
+
 longueurSequence = len(VDCmV)+len(VDC)+len(VAC)+len(IDCmA)+len(IDC)+len(IACmA)+len(IAC)+len(R)
 print(longueurSequence)
 
 tempsAttente = 5000 #en ms
 
+# from main import *
+from Calibrators.Fluke_API import *
+from Calibrators.Meatest_API import *
+# from Calibrators.CX_Metrix_API import *
+from sequences_manager import *
 
 def Sequence():
-    from elec_interface_v30 import MafenetreElec, Canevas
+    from elec_interface_v30 import MafenetreElec, Canevas, liste
     global  numSequence, longueurSequence
     global VDCmV, VDC, VAC, IDCmA, IDC, IACmA, IAC, R
     global listeNombre, l
     
     numSequence += 1
 
-    ser = serial.Serial( #RS232 avec Fluke
-    port = '/dev/ttyUSB0',
-    baudrate = 9600,
-    parity = serial.PARITY_NONE,
-    stopbits = serial.STOPBITS_ONE,
-    bytesize = serial.EIGHTBITS,
-    xonxoff = True,
-    timeout = 1
-    )
+    # ser = serial.Serial( #RS232 avec Fluke
+    # port = '/dev/ttyUSB0',
+    # baudrate = 9600,
+    # parity = serial.PARITY_NONE,
+    # stopbits = serial.STOPBITS_ONE,
+    # bytesize = serial.EIGHTBITS,
+    # xonxoff = True,
+    # timeout = 1
+    # )
+    #
+    # print(ser.isOpen())
 
-    print(ser.isOpen())
-    
+    device_name = liste.get(ACTIVE)
+    print(device_name)
+
+
+    if device_name == "Fluke":
+        print("entrou")
+        device = Fluke()
+    elif device_name == "Meatest":
+        device = Meatest()
+    elif device_name == "CX_1651":
+        device = Meatest()
+
     Canevas.delete(ALL)
     l = 0 #on écrit en haut du Canevas
+    from tkinter.filedialog import askopenfilename
+    filename = askopenfilename(filetypes=(("Text files", "*.txt"),
+                                           ("HTML files", "*.html;*.htm"),
+                                           ("All files", "*.*") ))
+
+    device.setup_communication()
+    # from sequences_manager import execute_sequence_file
+    execute_sequence_file(device,filename,Ecriture,Acquisition)
 
 
-    ser.write(b'STBY \n')
-    
-    if numSequence ==0:
-        Ecriture("Passez sur le calibre VDCmV puis cliquer sur Lancement de la séquence")
-    elif numSequence == 1:
-        Ecriture("Séquence en cours, patientez (...)")
-        for tension in VDCmV:
-            chaine = 'OUT ' + str(tension) + 'V, 0 HZ ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            #time.sleep(5)
-            MafenetreElec.after(tempsAttente)
 
-            Acquisition("VDCmV_"+str(tension))
-            
-        Ecriture("Passez sur le calibre VDC puis cliquer sur Lancement de la séquence")
-        ser.write(b'OUT 0V ; STBY \n')
-        
-    elif numSequence == 2:
-        Ecriture("Séquence en cours, patientez (...)")
-        for tension in VDC:
-            chaine = 'OUT ' + str(tension) + 'V, 0 HZ ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            MafenetreElec.after(tempsAttente)
 
-            Acquisition("VDC_"+str(tension))
-            
-        Ecriture("Passez sur le calibre VAC puis cliquer sur Lancement de la séquence")
-        ser.write(b'OUT 0V ; STBY \n')
+    # ORIGINAL:
+    # ser.write(b'STBY \n')
+    # if numSequence ==0:
+    #     Ecriture("Passez sur le calibre VDCmV puis cliquer sur Lancement de la séquence")
+    # elif numSequence == 1:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for tension in VDCmV:
+    #         chaine = 'OUT ' + str(tension) + 'V, 0 HZ ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         #time.sleep(5)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("VDCmV_"+str(tension))
+    #
+    #     Ecriture("Passez sur le calibre VDC puis cliquer sur Lancement de la séquence")
+    #     ser.write(b'OUT 0V ; STBY \n')
+    #
+    # elif numSequence == 2:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for tension in VDC:
+    #         chaine = 'OUT ' + str(tension) + 'V, 0 HZ ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("VDC_"+str(tension))
+    #
+    #     Ecriture("Passez sur le calibre VAC puis cliquer sur Lancement de la séquence")
+    #     ser.write(b'OUT 0V ; STBY \n')
+    #
+    # elif numSequence == 3:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for tension in VAC:
+    #         chaine = 'OUT ' + str(tension[0]) + 'V, '+ str(tension[1]) +'HZ'+ ' ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("VAC_"+str(tension))
+    #
+    #     ser.write(b'OUT 1V, 1 KHZ ; STBY \n')
+    #     Ecriture("Passez sur le calibre IDCmA (changer fils) puis cliquer sur Lancement de la séquence")
+    #
+    # elif numSequence == 4:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for courant in IDCmA:
+    #         chaine = 'OUT ' + str(courant) + 'MA, 0 HZ ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("IDCmA_"+str(courant))
+    #
+    #     Ecriture("Passez sur le calibre IDC (changer fils) puis cliquer sur Lancement de la séquence")
+    #     ser.write(b'OUT 0 A ; STBY \n')
+    #
+    # elif numSequence == 5:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for courant in IDC:
+    #         chaine = 'OUT ' + str(courant) + 'A, 0 HZ ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("IDC_"+str(courant))
+    #
+    #     Ecriture("Passez sur le calibre IACmA (changer fils) puis cliquer sur Lancement de la séquence")
+    #     ser.write(b'OUT 0 A ; STBY \n')
+    #
+    # elif numSequence == 6:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for courant in IACmA:
+    #         chaine = 'OUT ' + str(courant) + 'MA, 50 HZ ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("IACmA_"+str(courant))
+    #
+    #     Ecriture("Passez sur le calibre IAC (changer fils) puis cliquer sur Lancement de la séquence")
+    #     ser.write(b'OUT 0 A, 50 HZ ; STBY \n')
+    #
+    # elif numSequence == 7:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for courant in IAC:
+    #         chaine = 'OUT ' + str(courant) + 'A, 50 HZ ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("IAC_"+str(courant))
+    #
+    #     Ecriture("Passez sur le mode ohm (changer fils) puis cliquer sur Lancement de la séquence")
+    #     ser.write(b'OUT 0 A, 50 HZ ; STBY \n')
+    #
+    # elif numSequence == 8:
+    #     Ecriture("Séquence en cours, patientez (...)")
+    #     for resistance in R:
+    #         chaine = 'OUT ' + str(resistance) + 'OHM ; OPER \n'
+    #         b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
+    #         ser.write(b)
+    #         MafenetreElec.after(tempsAttente)
+    #
+    #         Acquisition("R_"+str(resistance))
+    #
+    #     ser.write(b'OUT 0 OHM; STBY \n')
 
-    elif numSequence == 3:
-        Ecriture("Séquence en cours, patientez (...)")
-        for tension in VAC:
-            chaine = 'OUT ' + str(tension[0]) + 'V, '+ str(tension[1]) +'HZ'+ ' ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            MafenetreElec.after(tempsAttente)
-
-            Acquisition("VAC_"+str(tension))
-            
-        ser.write(b'OUT 1V, 1 KHZ ; STBY \n')
-        Ecriture("Passez sur le calibre IDCmA (changer fils) puis cliquer sur Lancement de la séquence")
-
-    elif numSequence == 4:
-        Ecriture("Séquence en cours, patientez (...)")
-        for courant in IDCmA:
-            chaine = 'OUT ' + str(courant) + 'MA, 0 HZ ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            MafenetreElec.after(tempsAttente)
-
-            Acquisition("IDCmA_"+str(courant))
-            
-        Ecriture("Passez sur le calibre IDC (changer fils) puis cliquer sur Lancement de la séquence")
-        ser.write(b'OUT 0 A ; STBY \n')
-        
-    elif numSequence == 5:
-        Ecriture("Séquence en cours, patientez (...)")
-        for courant in IDC:
-            chaine = 'OUT ' + str(courant) + 'A, 0 HZ ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            MafenetreElec.after(tempsAttente)
-
-            Acquisition("IDC_"+str(courant))
-            
-        Ecriture("Passez sur le calibre IACmA (changer fils) puis cliquer sur Lancement de la séquence")
-        ser.write(b'OUT 0 A ; STBY \n')
-
-    elif numSequence == 6:
-        Ecriture("Séquence en cours, patientez (...)")
-        for courant in IACmA:
-            chaine = 'OUT ' + str(courant) + 'MA, 50 HZ ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            MafenetreElec.after(tempsAttente)
-
-            Acquisition("IACmA_"+str(courant))
-            
-        Ecriture("Passez sur le calibre IAC (changer fils) puis cliquer sur Lancement de la séquence")
-        ser.write(b'OUT 0 A, 50 HZ ; STBY \n')
-
-    elif numSequence == 7:
-        Ecriture("Séquence en cours, patientez (...)")
-        for courant in IAC:
-            chaine = 'OUT ' + str(courant) + 'A, 50 HZ ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            MafenetreElec.after(tempsAttente)
-
-            Acquisition("IAC_"+str(courant))
-            
-        Ecriture("Passez sur le mode ohm (changer fils) puis cliquer sur Lancement de la séquence")
-        ser.write(b'OUT 0 A, 50 HZ ; STBY \n')
-
-    elif numSequence == 8:
-        Ecriture("Séquence en cours, patientez (...)")
-        for resistance in R:
-            chaine = 'OUT ' + str(resistance) + 'OHM ; OPER \n'
-            b = bytes(chaine, 'utf-8') #on transforme la chaine str en byte
-            ser.write(b)
-            MafenetreElec.after(tempsAttente)
-
-            Acquisition("R_"+str(resistance))
-            
-        ser.write(b'OUT 0 OHM; STBY \n')
-
-        Ecriture("Etalonnage terminé")
-        numSequence = 0
+    Ecriture("Etalonnage terminé")
+    numSequence = 0
         
     fichier = open("certificatMX55.txt", "w") #ATTENTION: si le fichier existe on le supprime!
+    fin = open(filename, "rt")
+    data = fin.readlines()
+    for i,l in enumerate(data):
+        measured = l.replace('#',listeNombre[i])
+        if i >0:
+            data[i][2] = measured
+    # data = data.replace('pyton', 'python')
+    fin.close()
+
+    fin = open(filename, "wt")
+    fin.write("\n".join(data))
+    fin.close()
+
     for indice in range(len(listeNombre)) : 
         nombre = listeNombre[indice].replace(".",",")
         fichier.write(nombre+"\n")
     fichier.close()
-
-    ser.close()
+    device.close_communication()
+    from pdf_report_generator import generate_pdf
+    generate_pdf(filename)
+    # ser.close()
 
 
 ##MafenetreElec.withdraw()
@@ -203,13 +253,7 @@ def Sequence():
 repertoireScript = os.getcwd() #renvoie le chemin absolu du script
 path = repertoireScript+"/Temporaire/"
 
-listeNbreDigits=[]
-listeErreursVirgule = []
-listeTemps=[]
 
-listeNombre=[]
-listeNombreInt=[]
-listeImagesRognees=[]
 
 def Creation_Dossier(NomDossier):
     if not os.path.exists(path+NomDossier): #si dossier existe pas

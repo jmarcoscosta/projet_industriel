@@ -4,7 +4,7 @@
 import os #pour gérer les fichiers/dossiers
 import shutil #pour copier les fichiers textes
 import time
-import picamera
+#import picamera
 
 import numpy.core._methods #pour l'executable
 import numpy.lib.format #pour l'executable

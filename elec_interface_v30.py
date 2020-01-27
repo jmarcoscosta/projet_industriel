@@ -1,7 +1,8 @@
 ####LES IMPORTATIONS et VARIABLES/DEFINITIONS GLOBALES####
 
 from elec_acquisition_v30 import *
-
+from tkinter import Listbox
+from tkinter import Button
 
 ##--FONCTIONS--##
 
@@ -189,6 +190,9 @@ def Traitement_Zone_Initialisation():
 
 
 ##--FIN FONCTIONS--##
+def open_add_sequence_interface_():
+    from os import system
+    system('python add_sequence_interface.py')
 
 def Creation_Fenetre_Elec():
     global MafenetreElec, longueurV_SV, longueurH_SV, LabelValeurSeuil, ZoneInstruction, Canevas
@@ -201,22 +205,30 @@ def Creation_Fenetre_Elec():
     f1 = Frame(n)
     f2 = Frame(n)
 
-    n.add(f1, text = 'Acquisition')
     n.add(f2, text = 'Communication')
+    n.add(f1, text = 'Acquisition')
     n.pack()
 
 
-    Label2 = Label(f2, text ="Onglet Communication : non implémenté", fg = 'red', width=33)
-    Label2.pack(padx = 5, pady = 5)
+    # Label2 = Label(f2, text ="Onglet Communication : non implémenté", fg = 'red', width=33)
+    # Label2.pack(padx = 5, pady = 5)
 
     # liste pour choisir l'appareil
 
-    FrameListeAppareils = LabelFrame(f2, text="Marque de l'appareil",fg ='red', bg ='ivory', padx=2, pady=2)
-    FrameListeAppareils.pack()
+    # FrameListeAppareils = LabelFrame(f2, text="Marque de l'appareil",fg ='red', bg ='ivory', ipadx=2, ipady=2)
+    FrameListeAppareils = LabelFrame(f2, text="I.Marque de l'appareil",fg ='red', bg ='ivory')
+    FrameAddSequenceInterface= LabelFrame(f2, text="II.(facultatif) Crééer trame de vérificartion",fg ='red', bg ='ivory', width=130)
+    add_sequence_button = Button(FrameAddSequenceInterface,text='Lancer', command=open_add_sequence_interface_)
+    add_sequence_button.place(x = 90, y = 30)
+    # FrameListeAppareils.pack()
+    FrameListeAppareils.grid(row=0, column=0,ipadx=50,ipady= 50,padx = 20, pady = 20)
+    FrameAddSequenceInterface.grid(row=0, column=1,ipadx=50,ipady= 50,padx = 20, pady = 20)
 
     global liste 
     liste = Listbox(FrameListeAppareils)
     liste.insert(1, "Fluke")
+    liste.insert(2, "Meatest")
+    liste.insert(3, "CX_1651")
     liste.pack()
 
 
