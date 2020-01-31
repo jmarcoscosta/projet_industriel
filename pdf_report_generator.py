@@ -5,6 +5,17 @@ def save_as():
 												 filetypes=(("PDF files", "*.pdf")))
 	return filename
 
+def get_precision(number_str):
+	# print("after",number_str.split("."))
+	if len(number_str.split(".")) == 1:
+		return 0
+	after_dot = number_str.split(".")[1]
+	return len(after_dot)
+
+def format_precision(number,precision_digits):
+	s = "{0:."+str(precision_digits)+"f}"
+	return s.format(number)
+
 def calc_conformity(list_of_lists):
 	for i,l in enumerate(list_of_lists):
 		if i>0:
@@ -12,7 +23,13 @@ def calc_conformity(list_of_lists):
 				list_of_lists[i][-1] = "NOK"
 			else:
 				diff = float(l[2])-float(l[3])
-				list_of_lists[i][4] = str(diff)
+				measure_precision = get_precision(l[2]) # number of digits after .
+				new_diff = format_precision(diff,measure_precision)
+				# print("diff",diff)
+				# print("new diff",new_diff)
+				list_of_lists[i][4] = new_diff
+				list_of_lists[i][3] = format_precision(float(l[3]),measure_precision)
+				list_of_lists[i][5] = format_precision(float(l[5]),measure_precision)
 				if abs(diff) <= float(l[5]):
 					list_of_lists[i][-1] = "OK"
 				else:
@@ -29,7 +46,13 @@ def generate_pdf(txt_file):
 		else:
 			lines_data.append(l.split())
 	# print(lines_data)
+	file.close()
+	file = open(txt_file,"w")
 	calc_conformity(lines_data)
+
+	for l in lines_data:
+		file.write(" ".join(l)+"\n")
+	file.close()
 # FONCTION - CALIBRE - APPAREIL - ETALON - ECART - EMT - INCERTITUDE - CONFORMITE
 # VDC 50 _MV  # 25.0    -25.0  remplir    remplir   NOK
 
